@@ -1,0 +1,552 @@
+<ion-header>
+  <ion-toolbar [color]="role === 'pelerin' ? 'primary' : role === 'agent' ? 'success' : 'warning'">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <span *ngIf="role === 'pelerin'">Inscription Pèlerin</span>
+      <span *ngIf="role === 'agent'">Inscription Agent</span>
+      <span *ngIf="role === 'admin'">Inscription Administrateur</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" [ngClass]="role === 'pelerin' ? 'bg-pelerin' : role === 'agent' ? 'bg-agent' : 'bg-admin'">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-8">
+        <!-- Carte avec bordure colorée selon le rôle -->
+        <div class="card shadow-lg border-0"
+             [ngClass]="role === 'pelerin' ? 'border-primary border-3' : role === 'agent' ? 'border-success border-3' : 'border-warning border-3'"
+             style="border-radius: 20px;">
+
+          <!-- En-tête dynamique avec gradient selon le rôle -->
+          <div class="card-header text-white text-center py-4"
+               [ngClass]="role === 'pelerin' ? 'bg-primary' : role === 'agent' ? 'bg-success' : 'bg-warning'"
+               style="border-radius: 20px 20px 0 0;">
+            <div class="d-flex justify-content-center mb-3">
+              <div class="rounded-circle bg-white bg-opacity-25 p-3">
+                <ion-icon [name]="role === 'pelerin' ? 'person-circle' : role === 'agent' ? 'briefcase' : 'shield-checkmark'" size="large"></ion-icon>
+              </div>
+            </div>
+            <h3 class="fw-bold mb-2">
+              <span *ngIf="role === 'pelerin'">Créer un compte Pèlerin</span>
+              <span *ngIf="role === 'agent'">Créer un compte Agent</span>
+              <span *ngIf="role === 'admin'">Crée un compte Administrateur</span>
+            </h3>
+            <p class="mb-0 opacity-90">
+              <span *ngIf="role === 'pelerin'">Remplissez le formulaire pour réserver votre voyage Omra</span>
+              <span *ngIf="role === 'agent'">Remplissez le formulaire pour gérer vos voyages Omra</span>
+              <span *ngIf="role === 'admin'">Remplissez le formulaire pour administrer la plateforme</span>
+            </p>
+          </div>
+
+          <div class="card-body p-4">
+            <!-- Badge de rôle -->
+            <div class="text-center mb-4">
+              <span class="badge px-4 py-2 fw-bold"
+                    [ngClass]="role === 'pelerin' ? 'bg-primary text-white' : role === 'agent' ? 'bg-success text-white' : 'bg-warning text-dark'">
+                <ion-icon [name]="role === 'pelerin' ? 'person-circle' : role === 'agent' ? 'briefcase' : 'shield-checkmark'" class="me-2"></ion-icon>
+                <span *ngIf="role === 'pelerin'">PÈLERIN</span>
+                <span *ngIf="role === 'agent'">AGENT</span>
+                <span *ngIf="role === 'admin'">ADMINISTRATEUR</span>
+              </span>
+            </div>
+
+            <!-- FORMULAIRE PÈLERIN (BLEU) -->
+            <div *ngIf="role === 'pelerin'">
+              <!-- Informations personnelles -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #3b82f6 !important; color: #1d4ed8;">
+                  <ion-icon name="person-circle-outline" class="me-2"></ion-icon>
+                  Informations personnelles
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Civilité *</label>
+                    <select class="form-select form-select-lg"
+                            [(ngModel)]="userData.civilite"
+                            name="civilite"
+                            required
+                            style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                      <option value="Monsieur">Monsieur</option>
+                      <option value="Madame">Madame</option>
+                      <option value="Mademoiselle">Mademoiselle</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Rôle</label>
+                    <input type="text" class="form-control form-control-lg"
+                           value="Pèlerin"
+                           disabled
+                           style="border-radius: 12px; height: 50px; background-color: #dbeafe; border: 2px solid #93c5fd; color: #1e40af;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Prénom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.prenom"
+                           name="prenom"
+                           placeholder="Votre prénom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Nom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.nom"
+                           name="nom"
+                           placeholder="Votre nom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coordonnées -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #3b82f6 !important; color: #1d4ed8;">
+                  <ion-icon name="location-outline" class="me-2"></ion-icon>
+                  Coordonnées
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Email *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email"
+                           name="email"
+                           placeholder="exemple@email.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Confirmer Email *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email_confirmation"
+                           name="email_confirmation"
+                           placeholder="exemple@email.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Téléphone *</label>
+                    <input type="tel"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.telephone"
+                           name="telephone"
+                           placeholder="+216 XX XXX XXX"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #1e40af;">Ville *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.ville"
+                           name="ville"
+                           placeholder="Votre ville"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-semibold" style="color: #1e40af;">Adresse *</label>
+                  <input type="text"
+                         class="form-control form-control-lg"
+                         [(ngModel)]="userData.adresse"
+                         name="adresse"
+                         placeholder="Votre adresse complète"
+                         required
+                         style="border-radius: 12px; height: 50px; border: 2px solid #dbeafe;">
+                </div>
+              </div>
+            </div>
+
+            <!-- FORMULAIRE AGENT (VERT) -->
+            <div *ngIf="role === 'agent'">
+              <!-- Informations de base -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #10b981 !important; color: #047857;">
+                  <ion-icon name="briefcase-outline" class="me-2"></ion-icon>
+                  Informations professionnelles
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Prénom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.prenom"
+                           name="prenom"
+                           placeholder="Votre prénom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Nom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.nom"
+                           name="nom"
+                           placeholder="Votre nom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Rôle</label>
+                    <input type="text" class="form-control form-control-lg"
+                           value="Agent"
+                           disabled
+                           style="border-radius: 12px; height: 50px; background-color: #d1fae5; border: 2px solid #a7f3d0; color: #065f46;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Code d'accès *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.access_code"
+                           name="access_code"
+                           placeholder="Code fourni par l'admin"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coordonnées professionnelles -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #10b981 !important; color: #047857;">
+                  <ion-icon name="business-outline" class="me-2"></ion-icon>
+                  Coordonnées professionnelles
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Email professionnel *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email"
+                           name="email"
+                           placeholder="professionnel@email.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Confirmer Email *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email_confirmation"
+                           name="email_confirmation"
+                           placeholder="professionnel@email.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Téléphone professionnel *</label>
+                    <input type="tel"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.telephone"
+                           name="telephone"
+                           placeholder="+216 XX XXX XXX"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #065f46;">Agence *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.agence"
+                           name="agence"
+                           placeholder="Nom de l'agence"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #d1fae5;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- FORMULAIRE ADMIN (ORANGE/JAUNE) -->
+            <div *ngIf="role === 'admin'">
+              <!-- Informations de base -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #f59e0b !important; color: #b45309;">
+                  <ion-icon name="shield-checkmark-outline" class="me-2"></ion-icon>
+                  Informations administratives
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Prénom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.prenom"
+                           name="prenom"
+                           placeholder="Votre prénom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Nom *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.nom"
+                           name="nom"
+                           placeholder="Votre nom"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Rôle</label>
+                    <input type="text" class="form-control form-control-lg"
+                           value="Administrateur"
+                           disabled
+                           style="border-radius: 12px; height: 50px; background-color: #fef3c7; border: 2px solid #fde68a; color: #92400e;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Code d'accès admin *</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.access_code"
+                           name="access_code"
+                           placeholder="Code admin secret"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Coordonnées administratives -->
+              <div class="mb-5">
+                <h5 class="border-bottom pb-2 mb-4" style="border-color: #f59e0b !important; color: #b45309;">
+                  <ion-icon name="key-outline" class="me-2"></ion-icon>
+                  Accès administratif
+                </h5>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Email administratif *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email"
+                           name="email"
+                           placeholder="admin@entreprise.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                  </div>
+
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold" style="color: #92400e;">Confirmer Email *</label>
+                    <input type="email"
+                           class="form-control form-control-lg"
+                           [(ngModel)]="userData.email_confirmation"
+                           name="email_confirmation"
+                           placeholder="admin@entreprise.com"
+                           required
+                           style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-semibold" style="color: #92400e;">Téléphone administratif *</label>
+                  <input type="tel"
+                         class="form-control form-control-lg"
+                         [(ngModel)]="userData.telephone"
+                         name="telephone"
+                         placeholder="+216 XX XXX XXX"
+                         required
+                         style="border-radius: 12px; height: 50px; border: 2px solid #fef3c7;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Mot de passe (commune à tous) -->
+            <div class="mb-5">
+              <h5 class="border-bottom pb-2 mb-4"
+                  [style.border-color]="role === 'pelerin' ? '#3b82f6' : role === 'agent' ? '#10b981' : '#f59e0b'"
+                  [style.color]="role === 'pelerin' ? '#1d4ed8' : role === 'agent' ? '#047857' : '#b45309'">
+                <ion-icon name="lock-closed-outline" class="me-2"></ion-icon>
+                {{ role === 'pelerin' ? 'Mot de passe' : 'Mot de passe sécurisé' }}
+              </h5>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold"
+                         [style.color]="role === 'pelerin' ? '#1e40af' : role === 'agent' ? '#065f46' : '#92400e'">
+                    Mot de passe *
+                  </label>
+                  <input type="password"
+                         class="form-control form-control-lg"
+                         [(ngModel)]="userData.password"
+                         name="password"
+                         [placeholder]="role === 'pelerin' ? 'Minimum 8 caractères' : 'Minimum 12 caractères'"
+                         [minlength]="role === 'pelerin' ? 8 : 12"
+                         required
+                         [style]="getInputStyle()">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold"
+                         [style.color]="role === 'pelerin' ? '#1e40af' : role === 'agent' ? '#065f46' : '#92400e'">
+                    Confirmation *
+                  </label>
+                  <input type="password"
+                         class="form-control form-control-lg"
+                         [(ngModel)]="userData.password_confirmation"
+                         name="password_confirmation"
+                         placeholder="Confirmez votre mot de passe"
+                         [minlength]="role === 'pelerin' ? 8 : 12"
+                         required
+                         [style]="getInputStyle()">
+                </div>
+              </div>
+
+              <div *ngIf="role === 'agent' || role === 'admin'" class="alert alert-warning mt-2"
+                   style="border-radius: 8px; background-color: #fef3c7; border-color: #fbbf24;">
+                <ion-icon name="shield-checkmark" class="me-2"></ion-icon>
+                Le mot de passe doit contenir au moins 12 caractères, incluant majuscules, minuscules, chiffres et caractères spéciaux.
+              </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="d-grid gap-3">
+              <button type="button"
+                      class="btn btn-lg py-3 fw-bold"
+                      (click)="register()"
+                      [disabled]="isLoading"
+                      [style]="getButtonStyle()"
+                      style="border-radius: 12px;">
+                <span *ngIf="!isLoading">
+                  <ion-icon [name]="role === 'pelerin' ? 'person-circle' : role === 'agent' ? 'briefcase' : 'shield-checkmark'" class="me-2"></ion-icon>
+                  <span *ngIf="role === 'pelerin'">Créer mon compte Pèlerin</span>
+                  <span *ngIf="role === 'agent'">Créer mon compte Agent</span>
+                  <span *ngIf="role === 'admin'">Créer mon compte Administrateur</span>
+                </span>
+                <span *ngIf="isLoading">
+                  <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                  Création en cours...
+                </span>
+              </button>
+
+              <!-- Bouton Retour avec href -->
+              <a href="/login"
+                 class="btn btn-outline-secondary btn-lg py-3 w-100"
+                 style="border-radius: 12px; text-decoration: none; display: block; text-align: center;">
+                <ion-icon name="arrow-back-outline" class="me-2"></ion-icon>
+                Retour à la connexion
+              </a>
+            </div>
+
+            <!-- Informations -->
+            <div class="alert mt-4"
+                 [ngClass]="role === 'pelerin' ? 'alert-info' : role === 'agent' ? 'alert-success' : 'alert-warning'"
+                 style="border-radius: 12px;">
+              <p class="mb-0">
+                <ion-icon name="information-circle-outline" class="me-2"></ion-icon>
+                En créant un compte, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
+                <span *ngIf="role === 'agent' || role === 'admin'" class="fw-semibold">
+                  Votre compte devra être validé par un administrateur.
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Styles CSS inline -->
+<style>
+.bg-pelerin {
+  --background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+}
+
+.bg-agent {
+  --background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+}
+
+.bg-admin {
+  --background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.alert-info {
+  background-color: #dbeafe !important;
+  border-color: #93c5fd !important;
+  color: #1e40af !important;
+}
+
+.alert-success {
+  background-color: #d1fae5 !important;
+  border-color: #a7f3d0 !important;
+  color: #065f46 !important;
+}
+
+.alert-warning {
+  background-color: #fef3c7 !important;
+  border-color: #fde68a !important;
+  color: #92400e !important;
+}
+
+.badge {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 20px !important;
+  }
+
+  h5 {
+    font-size: 1.1rem;
+  }
+
+  .form-control-lg {
+    font-size: 0.9rem !important;
+  }
+}
+</style>

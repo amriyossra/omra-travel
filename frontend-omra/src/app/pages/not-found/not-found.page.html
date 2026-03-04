@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Page non trouvée</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="not-found-content">
+  <div class="container">
+    <div class="not-found-illustration">
+      <div class="circle">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+      </div>
+    </div>
+
+    <h1>404</h1>
+    <h2>Page non trouvée</h2>
+
+    <p class="description">
+      Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
+    </p>
+
+    <div class="suggestions">
+      <p>Vous pouvez essayer :</p>
+      <ul>
+        <li>Vérifier l'URL dans la barre d'adresse</li>
+        <li>Retourner à la page d'accueil</li>
+        <li>Vous connecter avec un autre compte</li>
+      </ul>
+    </div>
+
+    <div class="actions">
+      <ion-button routerLink="/login" color="primary" class="login-btn">
+        <ion-icon name="log-in-outline" slot="start"></ion-icon>
+        Se connecter
+      </ion-button>
+
+      <ion-button routerLink="/" color="light" class="home-btn">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        Accueil
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <div class="footer">
+    <p>© 2026 OmraPrestige - Tous droits réservés</p>
+  </div>
+</ion-footer>

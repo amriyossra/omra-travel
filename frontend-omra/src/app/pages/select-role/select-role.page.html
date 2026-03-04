@@ -1,0 +1,242 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goToLogin()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Choisir un Profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+  <div class="container py-4">
+    <!-- En-tête -->
+    <div class="text-center mb-5">
+      <div class="mb-4">
+        <div class="d-inline-block p-3 rounded-circle bg-primary bg-opacity-10">
+          <ion-icon name="person-add" size="large" color="primary"></ion-icon>
+        </div>
+      </div>
+      <h1 class="fw-bold text-dark mb-3">Créer votre compte</h1>
+      <p class="lead text-muted mb-0">Sélectionnez le type de compte qui correspond à vos besoins</p>
+    </div>
+
+    <!-- Cartes des rôles -->
+    <div class="row g-4 justify-content-center">
+
+      <!-- Pèlerin -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-lg border-0"
+             [class.border-primary]="selectedRole === 'pelerin'"
+             [class.border-3]="selectedRole === 'pelerin'"
+             style="border-radius: 20px; cursor: pointer;"
+             (click)="selectRole('pelerin')"
+             (dblclick)="showRoleDetails('pelerin')">
+          <div class="card-header text-center py-4"
+               [style.background]="selectedRole === 'pelerin' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#f8f9fa'"
+               [style.color]="selectedRole === 'pelerin' ? 'white' : 'inherit'"
+               style="border-radius: 20px 20px 0 0;">
+            <div class="mb-3">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center p-3"
+                   [style.background]="selectedRole === 'pelerin' ? 'rgba(255,255,255,0.2)' : 'rgba(102, 126, 234, 0.1)'">
+                <ion-icon name="person" size="large"
+                          [color]="selectedRole === 'pelerin' ? 'light' : 'primary'"></ion-icon>
+              </div>
+            </div>
+            <h4 class="fw-bold mb-0">Pèlerin</h4>
+            <p class="mb-0 opacity-75">Pour les voyageurs</p>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="flex-grow-1">
+              <h6 class="text-primary mb-3">Fonctionnalités incluses :</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Réservation de voyages Omra</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Gestion des réservations</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Suivi des paiements</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Documents de voyage</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-top">
+              <div class="text-center mb-2">
+                <span class="h4 fw-bold text-primary">Gratuit</span>
+              </div>
+              <button class="btn w-100"
+                      [class.btn-primary]="selectedRole === 'pelerin'"
+                      [class.btn-outline-primary]="selectedRole !== 'pelerin'"
+                      style="border-radius: 10px; padding: 12px;">
+                {{ selectedRole === 'pelerin' ? '✓ Sélectionné' : 'Sélectionner' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-lg border-0"
+             [class.border-warning]="selectedRole === 'agent'"
+             [class.border-3]="selectedRole === 'agent'"
+             style="border-radius: 20px; cursor: pointer;"
+             (click)="selectRole('agent')"
+             (dblclick)="showRoleDetails('agent')">
+          <div class="card-header text-center py-4"
+               [style.background]="selectedRole === 'agent' ? 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)' : '#f8f9fa'"
+               [style.color]="selectedRole === 'agent' ? 'white' : 'inherit'"
+               style="border-radius: 20px 20px 0 0;">
+            <div class="mb-3">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center p-3"
+                   [style.background]="selectedRole === 'agent' ? 'rgba(255,255,255,0.2)' : 'rgba(246, 211, 101, 0.1)'">
+                <ion-icon name="briefcase" size="large"
+                          [color]="selectedRole === 'agent' ? 'light' : 'warning'"></ion-icon>
+              </div>
+            </div>
+            <h4 class="fw-bold mb-0">Agent</h4>
+            <p class="mb-0 opacity-75">Pour les professionnels</p>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="flex-grow-1">
+              <h6 class="text-warning mb-3">Fonctionnalités incluses :</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Gestion des réservations clients</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Interface simplifiée</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Rapports de gestion</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Support prioritaire</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-top">
+              <div class="text-center mb-2">
+                <span class="h4 fw-bold text-warning">Sur invitation</span>
+              </div>
+              <button class="btn w-100"
+                      [class.btn-warning]="selectedRole === 'agent'"
+                      [class.btn-outline-warning]="selectedRole !== 'agent'"
+                      style="border-radius: 10px; padding: 12px;">
+                {{ selectedRole === 'agent' ? '✓ Sélectionné' : 'Sélectionner' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-lg border-0"
+             [class.border-danger]="selectedRole === 'admin'"
+             [class.border-3]="selectedRole === 'admin'"
+             style="border-radius: 20px; cursor: pointer;"
+             (click)="selectRole('admin')"
+             (dblclick)="showRoleDetails('admin')">
+          <div class="card-header text-center py-4"
+               [style.background]="selectedRole === 'admin' ? 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' : '#f8f9fa'"
+               [style.color]="selectedRole === 'admin' ? 'white' : 'inherit'"
+               style="border-radius: 20px 20px 0 0;">
+            <div class="mb-3">
+              <div class="rounded-circle d-inline-flex align-items-center justify-content-center p-3"
+                   [style.background]="selectedRole === 'admin' ? 'rgba(255,255,255,0.2)' : 'rgba(240, 147, 251, 0.1)'">
+                <ion-icon name="shield-checkmark" size="large"
+                          [color]="selectedRole === 'admin' ? 'light' : 'danger'"></ion-icon>
+              </div>
+            </div>
+            <h4 class="fw-bold mb-0">Administrateur</h4>
+            <p class="mb-0 opacity-75">Pour la gestion</p>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="flex-grow-1">
+              <h6 class="text-danger mb-3">Fonctionnalités incluses :</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Gestion complète du système</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Statistiques détaillées</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Contrôle des utilisateurs</span>
+                </li>
+                <li class="mb-2 d-flex align-items-start">
+                  <ion-icon name="checkmark-circle" color="success" class="me-2 mt-1"></ion-icon>
+                  <span>Paramètres système</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4 pt-3 border-top">
+              <div class="text-center mb-2">
+                <span class="h4 fw-bold text-danger">Sur invitation</span>
+              </div>
+              <button class="btn w-100"
+                      [class.btn-danger]="selectedRole === 'admin'"
+                      [class.btn-outline-danger]="selectedRole !== 'admin'"
+                      style="border-radius: 10px; padding: 12px;">
+                {{ selectedRole === 'admin' ? '✓ Sélectionné' : 'Sélectionner' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouton continuer -->
+    <div class="text-center mt-5">
+      <button class="btn btn-primary btn-lg px-5 py-3 fw-bold shadow continue-btn"
+              (click)="continue()"
+              style="border-radius: 15px; min-width: 250px;">
+        <ion-icon name="arrow-forward" class="me-2"></ion-icon>
+        Continuer en tant que {{ selectedRole | titlecase }}
+      </button>
+
+      <p class="mt-4 text-muted">
+        Déjà un compte ?
+        <button type="button" class="btn btn-link text-primary fw-bold" (click)="goToLogin()">
+          Se connecter
+        </button>
+      </p>
+    </div>
+
+    <!-- Informations -->
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-8">
+        <div class="alert alert-light border" style="border-radius: 15px;">
+          <div class="d-flex">
+            <ion-icon name="information-circle-outline" class="me-3 text-primary" size="large"></ion-icon>
+            <div>
+              <h6 class="fw-bold mb-2">Comment choisir ?</h6>
+              <p class="mb-0 small">
+                • <strong>Pèlerin</strong> : Si vous souhaitez réserver un voyage Omra<br>
+                • <strong>Agent</strong> : Si vous gérez les réservations pour des clients<br>
+                • <strong>Admin</strong> : Si vous administrez la plateforme complète
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

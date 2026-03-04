@@ -1,0 +1,214 @@
+.not-found-content {
+  --background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .not-found-illustration {
+    margin-bottom: 30px;
+
+    .circle {
+      width: 150px;
+      height: 150px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(26, 95, 180, 0.1);
+      animation: pulse 2s infinite ease-in-out;
+
+      ion-icon {
+        font-size: 80px;
+        color: #1a5fb4;
+      }
+    }
+  }
+
+  h1 {
+    font-size: 6rem;
+    font-weight: 800;
+    color: #1a5fb4;
+    margin: 0;
+    line-height: 1;
+    text-shadow: 0 10px 20px rgba(26, 95, 180, 0.1);
+    animation: fadeInDown 0.5s ease;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 10px 0 20px;
+    animation: fadeInUp 0.5s ease 0.1s both;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    animation: fadeInUp 0.5s ease 0.2s both;
+  }
+
+  .suggestions {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 30px;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+    animation: fadeInUp 0.5s ease 0.3s both;
+
+    p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 12px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-bottom: 8px;
+        list-style-type: disc;
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    animation: fadeInUp 0.5s ease 0.4s both;
+
+    ion-button {
+      --border-radius: 30px;
+      --padding-top: 12px;
+      --padding-bottom: 12px;
+      --padding-start: 24px;
+      --padding-end: 24px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &.login-btn {
+        --background: #1a5fb4;
+        --background-hover: #0e4a8a;
+      }
+
+      &.home-btn {
+        --color: #2c3e50;
+        --border-color: #dee2e6;
+        --border-width: 1px;
+        --border-style: solid;
+      }
+    }
+  }
+
+  .redirect-message {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #95a5a6;
+    animation: fadeIn 0.5s ease 0.5s both;
+  }
+}
+
+.footer {
+  text-align: center;
+  padding: 16px;
+  background: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #95a5a6;
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 30px rgba(26, 95, 180, 0.1);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(26, 95, 180, 0.2);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive
+@media (max-width: 576px) {
+  .not-found-content {
+    h1 {
+      font-size: 4rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    .description {
+      font-size: 1rem;
+    }
+
+    .actions {
+      flex-direction: column;
+      width: 100%;
+
+      ion-button {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -1,0 +1,268 @@
+<app-header></app-header>
+
+<ion-content class="omra-personnalise-content">
+  <!-- Hero Section -->
+  <div class="hero-section py-5" style="background: linear-gradient(135deg, #0d6efd, #0b5ed7);">
+    <div class="container">
+      <div class="row py-4">
+        <div class="col-lg-8 mx-auto text-center text-white">
+          <h1 class="display-4 fw-bold mb-3">Omra Personnalisée</h1>
+          <p class="lead fs-4">Créez votre voyage sur mesure selon vos besoins et votre budget</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulaire -->
+  <div class="form-section py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-lg rounded-4 p-4">
+            <div class="card-body">
+              <h2 class="text-center fw-bold mb-4">Composez votre Omra idéale</h2>
+
+              <form [formGroup]="omraForm" (ngSubmit)="submitForm()">
+                <!-- Étape 1: Informations de base -->
+                <div class="form-step mb-4 p-4 bg-light rounded-3">
+                  <h5 class="fw-bold mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">1</span>
+                    Informations de base
+                  </h5>
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Nombre de personnes *</label>
+                      <input type="number" class="form-control" formControlName="nombrePersonnes"
+                             placeholder="Ex: 2" min="1" max="20">
+                      <div class="text-danger small mt-1" *ngIf="omraForm.get('nombrePersonnes')?.invalid && omraForm.get('nombrePersonnes')?.touched">
+                        Minimum 1 personne
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Durée du séjour (jours) *</label>
+                      <input type="number" class="form-control" formControlName="duree"
+                             placeholder="Ex: 14" min="7" max="30">
+                      <div class="text-danger small mt-1" *ngIf="omraForm.get('duree')?.invalid && omraForm.get('duree')?.touched">
+                        Entre 7 et 30 jours
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Date de départ *</label>
+                      <input type="date" class="form-control" formControlName="dateDepart" [min]="today">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Ville de départ *</label>
+                      <select class="form-select" formControlName="villeDepart">
+                        <option value="">Choisir...</option>
+                        <option value="tunis">Tunis</option>
+                        <option value="sfax">Sfax</option>
+                        <option value="sousse">Sousse</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Étape 2: Hébergement -->
+                <div class="form-step mb-4 p-4 bg-light rounded-3">
+                  <h5 class="fw-bold mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">2</span>
+                    Hébergement
+                  </h5>
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Type d'hôtel à La Mecque</label>
+                      <select class="form-select" formControlName="hotelMakkah">
+                        <option value="standard">Standard (500m-1km)</option>
+                        <option value="confort">Confort (300-500m)</option>
+                        <option value="premium">Premium (moins de 300m)</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Type d'hôtel à Médine</label>
+                      <select class="form-select" formControlName="hotelMedina">
+                        <option value="standard">Standard (500m-1km)</option>
+                        <option value="confort">Confort (300-500m)</option>
+                        <option value="premium">Premium (moins de 300m)</option>
+                      </select>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label fw-semibold">Type de chambre</label>
+                      <select class="form-select" formControlName="typeChambre">
+                        <option value="quadruple">Quadruple (4 personnes)</option>
+                        <option value="triple">Triple (3 personnes)</option>
+                        <option value="double">Double (2 personnes)</option>
+                        <option value="simple">Individuelle</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Étape 3: Services -->
+                <div class="form-step mb-4 p-4 bg-light rounded-3">
+                  <h5 class="fw-bold mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">3</span>
+                    Services supplémentaires
+                  </h5>
+
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="visa" id="visa">
+                        <label class="form-check-label" for="visa">Visa</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="assurance" id="assurance">
+                        <label class="form-check-label" for="assurance">Assurance voyage</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="transport" id="transport">
+                        <label class="form-check-label" for="transport">Transport local</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="guide" id="guide">
+                        <label class="form-check-label" for="guide">Guide privé</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="repas" id="repas">
+                        <label class="form-check-label" for="repas">Repas inclus</label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" formControlName="zamzam" id="zamzam">
+                        <label class="form-check-label" for="zamzam">Eau Zamzam</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Étape 4: Budget -->
+                <div class="form-step mb-4 p-4 bg-light rounded-3">
+                  <h5 class="fw-bold mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">4</span>
+                    Budget
+                  </h5>
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Budget par personne (TND)</label>
+                      <input type="number" class="form-control" formControlName="budget" placeholder="Ex: 5000">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label fw-semibold">Mode de paiement</label>
+                      <select class="form-select" formControlName="paiement">
+                        <option value="especes">Espèces</option>
+                        <option value="carte">Carte bancaire</option>
+                        <option value="virement">Virement</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Étape 5: Demandes spéciales -->
+                <div class="form-step mb-4 p-4 bg-light rounded-3">
+                  <h5 class="fw-bold mb-3">
+                    <span class="badge bg-primary rounded-pill me-2">5</span>
+                    Demandes spéciales
+                  </h5>
+
+                  <div class="mb-3">
+                    <textarea class="form-control" formControlName="demandes" rows="3"
+                              placeholder="Autres demandes ou informations complémentaires..."></textarea>
+                  </div>
+                </div>
+               <!--Bouttons-->
+           <div class="d-flex gap-3 justify-content-center mt-4">
+           <button type="button" class="btn btn-outline-secondary rounded-pill px-5 py-2" (click)="resetForm()" [disabled]="isLoading">
+              Réinitialiser
+           </button>
+           <button type="submit" class="btn btn-primary rounded-pill px-5 py-2" [disabled]="omraForm.invalid || isLoading">
+           <span *ngIf="!isLoading">Envoyer ma demande</span>
+           <span *ngIf="isLoading">
+           <ion-spinner name="dots" class="me-2"></ion-spinner>
+               Envoi...
+           </span>
+           </button>
+          </div>
+          <div class="alert alert-danger mt-4 text-center" *ngIf="errorMessage" role="alert">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  {{ errorMessage }}
+</div>
+                <!-- Message de confirmation -->
+                <div class="alert alert-success mt-4 text-center" *ngIf="showConfirmation" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  Demande envoyée avec succès ! Un agent vous contactera dans les plus brefs délais.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avantages -->
+  <div class="avantages-section py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center fw-bold mb-5">Pourquoi choisir l'Omra Personnalisée ?</h2>
+
+      <div class="row g-4">
+        <div class="col-md-3">
+          <div class="avantage-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="avantage-icon mb-3">
+              <i class="bi bi-calendar-check fs-1 text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Flexibilité totale</h5>
+            <p class="text-muted small">Choisissez vos dates selon vos disponibilités</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="avantage-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="avantage-icon mb-3">
+              <i class="bi bi-house-heart fs-1 text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Hébergement sur mesure</h5>
+            <p class="text-muted small">Sélectionnez l'hôtel qui correspond à vos critères</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="avantage-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="avantage-icon mb-3">
+              <i class="bi bi-wallet2 fs-1 text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Budget maîtrisé</h5>
+            <p class="text-muted small">Adaptez les services à votre budget</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="avantage-card text-center p-4 bg-white rounded-4 shadow-sm h-100">
+            <div class="avantage-icon mb-3">
+              <i class="bi bi-person-badge fs-1 text-primary"></i>
+            </div>
+            <h5 class="fw-bold">Accompagnement personnalisé</h5>
+            <p class="text-muted small">Un agent dédié pour vous conseiller</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</ion-content>
+
+

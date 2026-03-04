@@ -1,0 +1,86 @@
+<header class="header-section">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand fw-bold fs-3" routerLink="/home">
+        <span class="text-primary">Omra</span><span class="text-dark">Travel</span>
+      </a>
+
+      <!-- Bouton mobile -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Menu principal -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home" routerLinkActive="active">Accueil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/about" routerLinkActive="active">À propos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/omra-personnalise" routerLinkActive="active">Omra Personnalisée</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/blog" routerLinkActive="active">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact</a>
+          </li>
+        </ul>
+
+        <!-- Zone utilisateur -->
+        <div class="user-area ms-auto">
+          <!-- Non connecté -->
+          <div class="d-flex gap-2" *ngIf="!isLoggedIn">
+            <a class="btn btn-outline-primary rounded-pill px-4" routerLink="/login">
+              <i class="bi bi-box-arrow-in-right me-2"></i>Connexion
+            </a>
+            <a class="btn btn-primary rounded-pill px-4" routerLink="/register">
+              <i class="bi bi-person-plus me-2"></i>Inscription
+            </a>
+          </div>
+
+          <!-- Connecté - Dropdown manuel -->
+          <div class="dropdown-container position-relative" *ngIf="isLoggedIn">
+            <button class="btn btn-outline-primary rounded-pill px-3 d-flex align-items-center gap-2"
+                    (click)="toggleDropdown()">
+              <img [src]="userAvatar" alt="Avatar" class="rounded-circle" style="width: 24px; height: 24px; object-fit: cover;">
+              <span>{{ userName }}</span>
+              <i class="bi" [class.bi-chevron-down]="!isDropdownOpen" [class.bi-chevron-up]="isDropdownOpen"></i>
+            </button>
+
+            <!-- Dropdown menu -->
+            <div class="dropdown-menu-custom" *ngIf="isDropdownOpen">
+              <div class="dropdown-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                  <img [src]="userAvatar" alt="Avatar" class="rounded-circle" style="width: 48px; height: 48px;">
+                  <div>
+                    <div class="fw-bold">{{ userName }}</div>
+                    <small class="text-muted">{{ userEmail }}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item-custom" routerLink="/profile" (click)="isDropdownOpen = false">
+                <i class="bi bi-person-circle me-2"></i>Mon Profil
+              </a>
+              <a class="dropdown-item-custom" routerLink="/pelerin-dashboard" (click)="isDropdownOpen = false">
+                <i class="bi bi-calendar-check me-2"></i>Mes Réservations
+              </a>
+              <a class="dropdown-item-custom" routerLink="/favoris" (click)="isDropdownOpen = false">
+                <i class="bi bi-heart me-2"></i>Mes Favoris
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item-custom text-danger" (click)="logout()">
+                <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

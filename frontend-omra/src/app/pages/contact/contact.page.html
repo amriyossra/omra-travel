@@ -1,0 +1,51 @@
+<app-header></app-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>📍 Nos coordonnées</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Adresse :</strong> 123 Avenue du Pèlerinage, Tunis</p>
+      <p><strong>Email :</strong> contact@hajj-omra.com</p>
+      <p><strong>Téléphone :</strong> +216 00 000 000</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>💬 Envoyer un message</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <form (ngSubmit)="sendMessage()">
+        <ion-item>
+          <ion-label position="floating">Nom</ion-label>
+          <ion-input [(ngModel)]="contact.nom" name="nom" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input type="email" [(ngModel)]="contact.email" name="email" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Sujet</ion-label>
+          <ion-input [(ngModel)]="contact.sujet" name="sujet" required></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Message</ion-label>
+          <ion-textarea [(ngModel)]="contact.message" name="message" required></ion-textarea>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" class="ion-margin-top">
+          Envoyer
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  <app-footer></app-footer>
+</ion-content>
+
+

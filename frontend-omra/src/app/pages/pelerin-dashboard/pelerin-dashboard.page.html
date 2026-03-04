@@ -1,0 +1,257 @@
+<ion-content class="pelerin-content">
+  <!-- Bouton retour à l'accueil -->
+  <div class="container py-3">
+    <button class="btn btn-outline-primary rounded-circle p-2" routerLink="/home">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <!-- Bienvenue -->
+  <div class="welcome-section">
+    <div class="container">
+      <h1>Bienvenue {{user.name}}</h1>
+      <p>Gérez vos Réservations Omra</p>
+    </div>
+  </div>
+
+  <!-- SECTION MES RÉSERVATIONS -->
+  <div class="container">
+    <div class="reservations-section">
+      <div class="section-header">
+        <div class="header-left">
+          <h2>
+            <ion-icon name="calendar-outline" class="header-icon"></ion-icon>
+            Mes réservations
+          </h2>
+          <p>Suivez l'état de vos demandes en temps réel</p>
+        </div>
+        <div class="header-right">
+          <span class="total-badge">{{mesReservations.length}} réservation(s)</span>
+        </div>
+      </div>
+
+      <!-- Filtres par statut -->
+      <div class="reservation-filters">
+        <button class="filter-btn" [class.active]="reservationFilter === 'tous'" (click)="onFilterChange('tous')">
+          <ion-icon name="apps-outline"></ion-icon>
+          Toutes
+          <span class="count">{{mesReservations.length}}</span>
+        </button>
+        <button class="filter-btn" [class.active]="reservationFilter === 'en_attente'" (click)="onFilterChange('en_attente')">
+          <ion-icon name="time-outline"></ion-icon>
+          En attente
+          <span class="count">{{getReservationsCountByStatus('en_attente')}}</span>
+        </button>
+        <button class="filter-btn" [class.active]="reservationFilter === 'validée'" (click)="onFilterChange('validée')">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          Confirmées
+          <span class="count">{{getReservationsCountByStatus('validée') + getReservationsCountByStatus('confirmee')}}</span>
+        </button>
+        <button class="filter-btn" [class.active]="reservationFilter === 'refusée'" (click)="onFilterChange('refusée')">
+          <ion-icon name="close-circle-outline"></ion-icon>
+          Refusées
+          <span class="count">{{getReservationsCountByStatus('refusée') + getReservationsCountByStatus('annulee')}}</span>
+        </button>
+      </div>
+
+      <!-- Liste des réservations -->
+      <div class="reservations-grid" *ngIf="!loadingReservations">
+        <div class="reservation-card-modern" *ngFor="let res of filteredReservations">
+          <div class="card-header" [ngClass]="getStatutClass(res.statut)">
+            <div class="pack-info">
+              <h3>{{res.pack_titre}}</h3>
+              <span class="pack-id">#{{res.pack_id}}</span>
+            </div>
+            <div class="status-badge" [ngClass]="getStatutClass(res.statut)">
+              {{getStatutLabel(res.statut)}}
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="info-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <div class="info-content">
+                <span class="info-label">Départ</span>
+                <span class="info-value">{{formatDate(res.date_depart)}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <div class="info-content">
+                <span class="info-label">Retour</span>
+                <span class="info-value">{{formatDate(res.date_retour)}}</span>
+              </div>
+            </div>
+
+            <div class="info-item">
+              <ion-icon name="people-outline"></ion-icon>
+              <div class="info-content">
+                <span class="info-label">Personnes</span>
+                <span class="info-value">{{res.nombre_personnes}}</span>
+              </div>
+            </div>
+
+            <div class="info-item highlight">
+              <ion-icon name="cash-outline"></ion-icon>
+              <div class="info-content">
+                <span class="info-label">Prix total</span>
+                <span class="info-value">{{res.prix_total | number}} TND</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button class="btn-details" (click)="viewReservationDetails(res)">
+              <span>Voir détails</span>
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-reservations" *ngIf="loadingReservations">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Chargement de vos réservations...</p>
+      </div>
+
+      <!-- Aucune réservation -->
+      <div class="no-reservations" *ngIf="!loadingReservations && filteredReservations.length === 0">
+        <div class="empty-illustration">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <h3>Aucune réservation</h3>
+        <p>Vous n'avez pas encore de réservations avec ce statut.</p>
+        <button class="btn-browse" (click)="reservationFilter = 'tous'">
+          Voir toutes mes réservations
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Profil et Documents -->
+  <div class="container">
+    <div class="profile-section">
+      <h2>Mon Profil</h2>
+      <div class="profile-actions">
+        <ion-button expand="block" fill="outline" (click)="editProfile()">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          Modifier Mes Infos
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="openUploadModal()">
+          <ion-icon name="document-outline" slot="start"></ion-icon>
+          Uploader Mes Documents
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION DOCUMENTS -->
+  <div class="container" *ngIf="showDocuments">
+    <div class="documents-section">
+      <h3 class="section-title">Documents à fournir</h3>
+      <p class="section-subtitle">Veuillez télécharger les documents obligatoires suivants :</p>
+
+      <!-- Passeport -->
+      <div class="document-row">
+        <div class="document-label">
+          <span class="label-text">Scan Passeport <span class="required-star">*</span></span>
+          <span class="document-hint">Téléchargez votre passeport</span>
+        </div>
+        <div class="upload-area">
+          <input type="file" id="file-passeport" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event, 'passeport')" [disabled]="uploadedFiles['passeport']?.uploaded" #filePasseport>
+          <label for="file-passeport" class="upload-label">
+            <span class="btn-choose">Choisir un fichier</span>
+            <span class="file-status">{{uploadedFiles['passeport']?.file?.name || 'Aucun fichier choisi'}}</span>
+          </label>
+          <div class="upload-success" *ngIf="uploadedFiles['passeport']?.uploaded">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>Fichier téléchargé</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photo d'identité -->
+      <div class="document-row">
+        <div class="document-label">
+          <span class="label-text">Photo d'identité <span class="required-star">*</span></span>
+          <span class="document-hint">Téléchargez votre photo d'identité</span>
+        </div>
+        <div class="upload-area">
+          <input type="file" id="file-photo" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event, 'photo')" [disabled]="uploadedFiles['photo']?.uploaded" #filePhoto>
+          <label for="file-photo" class="upload-label">
+            <span class="btn-choose">Choisir un fichier</span>
+            <span class="file-status">{{uploadedFiles['photo']?.file?.name || 'Aucun fichier choisi'}}</span>
+          </label>
+          <div class="upload-success" *ngIf="uploadedFiles['photo']?.uploaded">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>Fichier téléchargé</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Récapitulatif des statuts -->
+      <div class="documents-summary">
+        <div class="summary-item" [class.completed]="uploadedFiles['passeport']?.uploaded">
+          <span class="summary-dot"></span>
+          <span>Passeport</span>
+          <span class="summary-status">{{uploadedFiles['passeport']?.uploaded ? '✓' : 'En attente'}}</span>
+        </div>
+        <div class="summary-item" [class.completed]="uploadedFiles['photo']?.uploaded">
+          <span class="summary-dot"></span>
+          <span>Photo</span>
+          <span class="summary-status">{{uploadedFiles['photo']?.uploaded ? '✓' : 'En attente'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DÉTAILS RÉSERVATION -->
+  <div class="details-modal" *ngIf="showReservationDetailsModal && selectedReservation">
+    <div class="modal-backdrop" (click)="closeReservationDetailsModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" (click)="closeReservationDetailsModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+      <div class="modal-inner">
+        <div class="modal-header">
+          <h2 class="modal-title">{{ selectedReservation.pack_titre }}</h2>
+          <div class="status-chip" [ngClass]="selectedReservation.statut">
+            <span>{{ getStatutLabel(selectedReservation.statut) }}</span>
+          </div>
+        </div>
+        <div class="dates-container">
+          <div class="date-box">
+            <span class="date-label">DÉPART</span>
+            <span class="date-value">{{ formatDate(selectedReservation.date_depart) }}</span>
+          </div>
+          <div class="date-arrow">
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+          <div class="date-box">
+            <span class="date-label">RETOUR</span>
+            <span class="date-value">{{ formatDate(selectedReservation.date_retour) }}</span>
+          </div>
+        </div>
+        <div class="info-grid">
+          <div class="info-cell">
+            <span class="info-label">Durée</span>
+            <span class="info-value">{{ calculerDuree(selectedReservation) }} jours</span>
+          </div>
+          <div class="info-cell">
+            <span class="info-label">Personnes</span>
+            <span class="info-value">{{ selectedReservation.nombre_personnes }}</span>
+          </div>
+        </div>
+        <div class="price-container">
+          <span class="price-label">Prix total</span>
+          <span class="price-value">{{ selectedReservation.prix_total | number }} TND</span>
+        </div>
+        <button class="modal-action" (click)="closeReservationDetailsModal()">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-content>

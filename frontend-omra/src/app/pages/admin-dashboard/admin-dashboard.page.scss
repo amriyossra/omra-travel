@@ -1,0 +1,50 @@
+.admin-header {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-radius: 0 0 20px 20px;
+}
+
+.bg-gradient-danger {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(135deg, #f39c12 0%, #d35400 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+}
+
+.bg-gradient-info {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.timeline {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+  }
+}
+
+.timeline-item {
+  position: relative;
+
+  .timeline-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    z-index: 1;
+  }
+}

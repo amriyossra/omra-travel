@@ -1,0 +1,691 @@
+<app-header></app-header>
+
+<ion-content class="home-content">
+
+ <!-- Hero Section avec image de fond Kaaba -->
+<div class="hero-section">
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="row align-items-center min-vh-50 py-5">
+      <div class="col-lg-8 mx-auto text-center text-white">
+        <h1 class="display-3 fw-bold mb-4 animate-fadeInUp">Votre partenaire de confiance pour une Omra sereine et organisée</h1>
+        <p class="lead mb-5 fs-4 animate-fadeInUp delay-1">
+          Nous vous accompagnons dans chaque étape de votre voyage spirituel, avec des formules adaptées à vos besoins et à votre budget..
+        </p>
+        <a class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-semibold animate-fadeInUp delay-2"
+           routerLink="/omra-personnalise">
+          Réserver Omra Personnalisée
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Stats Section -->
+  <div class="stats-section py-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="stat-card animate-scaleIn">
+            <div class="stat-number">{{packs.length}}</div>
+            <div class="stat-label">Formules</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card animate-scaleIn delay-1">
+            <div class="stat-number">{{getActivePacksCount()}}</div>
+            <div class="stat-label">Disponibles</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card animate-scaleIn delay-2">
+            <div class="stat-number">{{getStartingPrice() | number}} TND</div>
+            <div class="stat-label">À partir de</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section py-4">
+    <div class="container">
+      <div class="row g-3 align-items-center">
+        <div class="col-lg-5">
+          <div class="search-box">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0">
+                <i class="bi bi-search"></i>
+              </span>
+              <input type="text" class="form-control border-start-0"
+                     placeholder="Rechercher une formule Omra..."
+                     [(ngModel)]="searchQuery" (input)="filterPacks()">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="filter-buttons">
+            <button class="btn-filter" [class.active]="typeFilter === 'tous'"
+                    (click)="typeFilter = 'tous'; filterPacks()">Tous</button>
+            <button class="btn-filter" [class.active]="typeFilter === 'économique'"
+                    (click)="typeFilter = 'économique'; filterPacks()">Éco</button>
+            <button class="btn-filter" [class.active]="typeFilter === 'confort'"
+                    (click)="typeFilter = 'confort'; filterPacks()">Confort</button>
+            <button class="btn-filter" [class.active]="typeFilter === 'ramadan'"
+                    (click)="typeFilter = 'ramadan'; filterPacks()">Ramadan</button>
+            <button class="btn-filter" [class.active]="typeFilter === 'premium'"
+                    (click)="typeFilter = 'premium'; filterPacks()">Premium</button>
+          </div>
+        </div>
+        <div class="col-lg-2">
+          <div class="sort-select">
+            <select class="form-select" [(ngModel)]="sortBy" (change)="sortPacks()">
+              <option value="date">Date</option>
+              <option value="prix-asc">Prix ↑</option>
+              <option value="prix-desc">Prix ↓</option>
+              <option value="duree">Durée</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-3">Chargement des formules Omra...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-state">
+    <div class="container">
+      <div class="alert alert-danger text-center" role="alert">
+        <h4 class="alert-heading">Une erreur est survenue</h4>
+        <p>{{errorMessage}}</p>
+        <button class="btn-retry" (click)="loadPacks()">
+          <i class="bi bi-arrow-repeat me-2"></i>Réessayer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Packs Grid -->
+  <div *ngIf="!loading && !errorMessage" class="packs-section">
+    <div class="container">
+      <h2 class="section-title">Nos Packs Omra</h2>
+
+      <div class="row g-4" *ngIf="filteredPacks.length > 0">
+        <div class="col-lg-3 col-md-6" *ngFor="let pack of filteredPacks; let i = index">
+          <div class="pack-card animate-fadeInUp" [style.animation-delay]="(i * 0.1) + 's'">
+            <div class="pack-badge" [ngClass]="{
+              'bg-info': pack.type === 'économique',
+              'bg-success': pack.type === 'confort',
+              'bg-warning': pack.type === 'ramadan',
+              'bg-primary': pack.type === 'premium'
+            }">
+              {{pack.type | uppercase}}
+            </div>
+
+            <h3 class="pack-title">{{pack.titre}}</h3>
+
+            <div class="pack-price">
+              <div class="price-amount">{{pack.prix | number}} TND</div>
+              <div class="price-label">par personne</div>
+            </div>
+
+            <button class="btn-reserve" (click)="openReservationForm(pack, $event)">
+              <i class="bi bi-calendar-check me-2"></i>Réserver
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredPacks.length === 0" class="empty-state">
+        <i class="bi bi-cube"></i>
+        <h3>Aucune formule trouvée</h3>
+        <p>Aucune formule Omra ne correspond à vos critères de recherche.</p>
+        <button class="btn-reset" (click)="resetFilters()">
+          <i class="bi bi-arrow-repeat me-2"></i>Réinitialiser
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials Section -->
+  <div class="testimonials-section py-5">
+    <div class="container">
+      <h2 class="section-title">Avis de Nos Clients</h2>
+
+      <div class="row g-4">
+        <div class="col-md-4" *ngFor="let testimonial of [1,2,3]; let i = index">
+          <div class="testimonial-card animate-fadeInUp" [style.animation-delay]="(i * 0.2) + 's'">
+            <div class="stars">★★★★★</div>
+            <p class="testimonial-text">
+              "Un voyage exceptionnel ! Très bien organisé, je recommande vivement !"
+            </p>
+            <div class="testimonial-author">- Ahmed B.</div>
+            <div class="testimonial-role">Pèlerin</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <div class="newsletter-section py-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center text-white">
+          <h3 class="newsletter-title">Inscrivez-vous à notre Newsletter</h3>
+          <p class="newsletter-text">Recevez les dernières actualités et offres spéciales</p>
+          <div class="newsletter-form">
+            <div class="input-group">
+              <input type="email" class="form-control" placeholder="Votre adresse e-mail">
+              <button class="btn-subscribe" type="button">
+                <i class="bi bi-send me-2"></i>S'abonner
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- ============ MODAL FORMULAIRE DE RÉSERVATION - DESIGN PRO ============ -->
+<div class="reservation-modal" *ngIf="showReservationModal && selectedPack">
+  <div class="modal-overlay" (click)="closeReservationModal()"></div>
+
+  <div class="modal-container">
+    <!-- HEADER MODAL -->
+    <div class="modal-header">
+      <div class="d-flex align-items-center gap-3">
+        <div class="modal-icon">
+          <i class="bi bi-calendar-check-fill"></i>
+        </div>
+        <div>
+          <h2 class="fw-bold mb-1">Réservation Omra</h2>
+          <p class="mb-0 opacity-75">{{selectedPack.titre}} • <span class="fw-semibold">{{selectedPack.prix | number}} TND</span> / personne</p>
+        </div>
+      </div>
+      <button class="btn-close" (click)="closeReservationModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- BODY MODAL -->
+    <div class="modal-body">
+      <form [formGroup]="reservationForm" (ngSubmit)="submitReservation()">
+
+        <!-- ===== SECTION 1: IDENTITÉ ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-person-vcard me-2"></i>
+            <h3>Identité du pèlerin</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label">Nom complet <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="nom" placeholder="Votre nom">
+                <div class="error-feedback" *ngIf="reservationForm.get('nom')?.invalid && reservationForm.get('nom')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Nom requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Prénom <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="prenom" placeholder="Votre prénom">
+                <div class="error-feedback" *ngIf="reservationForm.get('prenom')?.invalid && reservationForm.get('prenom')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Prénom requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" class="form-control" formControlName="email" placeholder="exemple@email.com">
+                <div class="error-feedback" *ngIf="reservationForm.get('email')?.invalid && reservationForm.get('email')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Email valide requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Téléphone <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light">+216</span>
+                  <input type="tel" class="form-control" formControlName="telephone" placeholder="XX XXX XXX">
+                </div>
+                <div class="error-feedback" *ngIf="reservationForm.get('telephone')?.invalid && reservationForm.get('telephone')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>8 chiffres requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Date de naissance <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" formControlName="date_naissance" [max]="today">
+                <div class="error-feedback" *ngIf="reservationForm.get('date_naissance')?.invalid && reservationForm.get('date_naissance')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Date requise
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Lieu de naissance <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="lieu_naissance" placeholder="Ville de naissance">
+                <div class="error-feedback" *ngIf="reservationForm.get('lieu_naissance')?.invalid && reservationForm.get('lieu_naissance')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Lieu requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Nationalité <span class="text-danger">*</span></label>
+                <select class="form-select" formControlName="nationalite">
+                  <option value="" disabled selected>Choisir une nationalité</option>
+                  <option *ngFor="let nat of nationalites" [value]="nat">{{nat}}</option>
+                </select>
+                <div class="error-feedback" *ngIf="reservationForm.get('nationalite')?.invalid && reservationForm.get('nationalite')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Nationalité requise
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 2: PASSEPORT ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-passport me-2"></i>
+            <h3>Passeport</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label">Numéro de passeport <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="passeport_numero" placeholder="P123456" style="text-transform: uppercase;">
+                <div class="error-feedback" *ngIf="reservationForm.get('passeport_numero')?.invalid && reservationForm.get('passeport_numero')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Numéro requis
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Date d'expiration <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" formControlName="passeport_expiration" [min]="today">
+                <div class="error-feedback" *ngIf="reservationForm.get('passeport_expiration')?.invalid && reservationForm.get('passeport_expiration')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Date requise
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 3: ADRESSE ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-house-door me-2"></i>
+            <h3>Adresse</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-12">
+                <label class="form-label">Adresse complète <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="adresse" placeholder="Numéro, rue, quartier...">
+                <div class="error-feedback" *ngIf="reservationForm.get('adresse')?.invalid && reservationForm.get('adresse')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Adresse requise
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Code postal <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="code_postal" placeholder="1000" maxlength="4">
+                <div class="error-feedback" *ngIf="reservationForm.get('code_postal')?.invalid && reservationForm.get('code_postal')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>4 chiffres
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Ville <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="ville" placeholder="Tunis">
+                <div class="error-feedback" *ngIf="reservationForm.get('ville')?.invalid && reservationForm.get('ville')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Ville requise
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Pays <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="pays" placeholder="Tunisie">
+                <div class="error-feedback" *ngIf="reservationForm.get('pays')?.invalid && reservationForm.get('pays')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Pays requis
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 4: SÉJOUR ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-calendar-range me-2"></i>
+            <h3>Détails du séjour</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-4">
+                <label class="form-label">Personnes <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" formControlName="nombre_personnes" min="1" max="10" (change)="onNombrePersonnesChange()">
+                <div class="error-feedback" *ngIf="reservationForm.get('nombre_personnes')?.invalid && reservationForm.get('nombre_personnes')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Min 1
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Chambres <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" formControlName="nombre_chambres" min="1" [max]="reservationForm.get('nombre_personnes')?.value">
+                <div class="error-feedback" *ngIf="reservationForm.get('nombre_chambres')?.invalid && reservationForm.get('nombre_chambres')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Chambres requises
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Type de chambre <span class="text-danger">*</span></label>
+                <select class="form-select" formControlName="type_chambre">
+                  <option value="" disabled selected>Choisir...</option>
+                  <option *ngFor="let opt of typeChambreOptions" [value]="opt.value">
+                    {{opt.label}} - {{selectedPack.prix * opt.multiplicateur | number}} TND
+                  </option>
+                </select>
+                <div class="error-feedback" *ngIf="reservationForm.get('type_chambre')?.invalid && reservationForm.get('type_chambre')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Type requis
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 5: OPTIONS ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-star me-2"></i>
+            <h3>Options supplémentaires</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="option-checkbox">
+                  <label class="checkbox-label">
+                    <input type="checkbox" formControlName="assurance">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-text">Assurance voyage</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="option-checkbox">
+                  <label class="checkbox-label">
+                    <input type="checkbox" formControlName="visa">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-text">Visa</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="option-checkbox">
+                  <label class="checkbox-label">
+                    <input type="checkbox" formControlName="transport_local">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-text">Transport local</span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="option-checkbox">
+                  <label class="checkbox-label">
+                    <input type="checkbox" formControlName="guide_prive">
+                    <span class="checkbox-custom"></span>
+                    <span class="checkbox-text">Guide privé</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 6: PRÉFÉRENCES ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-egg-fried me-2"></i>
+            <h3>Préférences alimentaires</h3>
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label">Régime alimentaire</label>
+                <select class="form-select" formControlName="regime_alimentaire">
+                  <option *ngFor="let opt of regimeOptions" [value]="opt.value">{{opt.label}}</option>
+                </select>
+              </div>
+              <div class="col-md-6" *ngIf="reservationForm.get('regime_alimentaire')?.value === 'autre'">
+                <label class="form-label">Précisez <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" formControlName="regime_alimentaire_autre" placeholder="Votre régime">
+                <div class="error-feedback" *ngIf="reservationForm.get('regime_alimentaire_autre')?.invalid && reservationForm.get('regime_alimentaire_autre')?.touched">
+                  <i class="bi bi-exclamation-circle me-1"></i>Précisez votre régime
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 7: MÉDICAL ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-heart-pulse me-2"></i>
+            <h3>Informations médicales</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="option-checkbox">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="probleme_sante">
+                  <span class="checkbox-custom"></span>
+                  <span class="checkbox-text">Avez-vous des problèmes de santé particuliers ?</span>
+                </label>
+              </div>
+            </div>
+            <div *ngIf="reservationForm.get('probleme_sante')?.value">
+              <label class="form-label">Détails</label>
+              <textarea class="form-control" formControlName="informations_medicales" rows="3" placeholder="Décrivez vos besoins médicaux..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 8: DOCUMENTS ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            <h3>Documents requis</h3>
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-4"><i class="bi bi-info-circle me-2"></i>Formats acceptés : PDF, JPG, PNG (max 5MB)</p>
+
+            <div class="documents-list">
+              <!-- Passeport -->
+              <div class="document-item">
+                <div class="document-info">
+                  <i class="bi bi-passport fs-4 text-primary"></i>
+                  <div>
+                    <h4>Passeport</h4>
+                    <span class="badge" [class.bg-success]="uploadedFiles['passeport']?.uploaded" [class.bg-warning]="!uploadedFiles['passeport']?.uploaded">
+                      {{uploadedFiles['passeport']?.uploaded ? 'Téléchargé' : 'Requis'}}
+                    </span>
+                  </div>
+                </div>
+                <div class="upload-area">
+                  <input type="file" id="file-passeport" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event, 'passeport')" [disabled]="uploadedFiles['passeport']?.uploaded">
+                  <label for="file-passeport" class="upload-label" [class.uploaded]="uploadedFiles['passeport']?.uploaded">
+                    <i class="bi" [class.bi-cloud-upload]="!uploadedFiles['passeport']?.uploaded" [class.bi-check-circle-fill]="uploadedFiles['passeport']?.uploaded"></i>
+                    <span>{{uploadedFiles['passeport']?.uploaded ? 'Fichier ajouté' : 'Choisir un fichier'}}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Visa -->
+              <div class="document-item">
+                <div class="document-info">
+                  <i class="bi bi-file-earmark-check fs-4 text-primary"></i>
+                  <div>
+                    <h4>Visa</h4>
+                    <span class="badge" [class.bg-success]="uploadedFiles['visa']?.uploaded" [class.bg-warning]="!uploadedFiles['visa']?.uploaded">
+                      {{uploadedFiles['visa']?.uploaded ? 'Téléchargé' : 'Requis'}}
+                    </span>
+                  </div>
+                </div>
+                <div class="upload-area">
+                  <input type="file" id="file-visa" accept=".pdf,.jpg,.jpeg,.png" (change)="onFileSelected($event, 'visa')" [disabled]="uploadedFiles['visa']?.uploaded">
+                  <label for="file-visa" class="upload-label" [class.uploaded]="uploadedFiles['visa']?.uploaded">
+                    <i class="bi" [class.bi-cloud-upload]="!uploadedFiles['visa']?.uploaded" [class.bi-check-circle-fill]="uploadedFiles['visa']?.uploaded"></i>
+                    <span>{{uploadedFiles['visa']?.uploaded ? 'Fichier ajouté' : 'Choisir un fichier'}}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Photo -->
+              <div class="document-item">
+                <div class="document-info">
+                  <i class="bi bi-camera fs-4 text-primary"></i>
+                  <div>
+                    <h4>Photo d'identité</h4>
+                    <span class="badge" [class.bg-success]="uploadedFiles['photo']?.uploaded" [class.bg-warning]="!uploadedFiles['photo']?.uploaded">
+                      {{uploadedFiles['photo']?.uploaded ? 'Téléchargé' : 'Requis'}}
+                    </span>
+                  </div>
+                </div>
+                <div class="upload-area">
+                  <input type="file" id="file-photo" accept=".jpg,.jpeg,.png" (change)="onFileSelected($event, 'photo')" [disabled]="uploadedFiles['photo']?.uploaded">
+                  <label for="file-photo" class="upload-label" [class.uploaded]="uploadedFiles['photo']?.uploaded">
+                    <i class="bi" [class.bi-cloud-upload]="!uploadedFiles['photo']?.uploaded" [class.bi-check-circle-fill]="uploadedFiles['photo']?.uploaded"></i>
+                    <span>{{uploadedFiles['photo']?.uploaded ? 'Fichier ajouté' : 'Choisir un fichier'}}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progression -->
+            <div class="documents-progress mt-4">
+              <div class="progress-item" [class.completed]="uploadedFiles['passeport']?.uploaded">
+                <span class="progress-dot"></span>
+                <span>Passeport</span>
+                <span class="progress-status">{{uploadedFiles['passeport']?.uploaded ? '✓' : 'En attente'}}</span>
+              </div>
+              <div class="progress-item" [class.completed]="uploadedFiles['visa']?.uploaded">
+                <span class="progress-dot"></span>
+                <span>Visa</span>
+                <span class="progress-status">{{uploadedFiles['visa']?.uploaded ? '✓' : 'En attente'}}</span>
+              </div>
+              <div class="progress-item" [class.completed]="uploadedFiles['photo']?.uploaded">
+                <span class="progress-dot"></span>
+                <span>Photo</span>
+                <span class="progress-status">{{uploadedFiles['photo']?.uploaded ? '✓' : 'En attente'}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SECTION 9: NOTES ===== -->
+        <div class="form-card">
+          <div class="card-header">
+            <i class="bi bi-chat-text me-2"></i>
+            <h3>Notes</h3>
+          </div>
+          <div class="card-body">
+            <textarea class="form-control" formControlName="notes_pelerin" rows="3" placeholder="Informations complémentaires..."></textarea>
+          </div>
+        </div>
+        <!-- ===== SECTION 10: PAIEMENT ===== -->
+<div class="form-card">
+  <div class="card-header">
+    <i class="bi bi-credit-card me-2"></i>
+    <h3>Paiement</h3>
+  </div>
+  <div class="card-body">
+    <div class="row g-4">
+      <!-- Type de paiement -->
+      <div class="col-md-6">
+        <label class="form-label">Mode de paiement <span class="text-danger">*</span></label>
+        <select class="form-select" formControlName="mode_paiement">
+          <option value="especes">Espèces</option>
+          <option value="carte">Carte bancaire</option>
+          <option value="virement">Virement bancaire</option>
+          <option value="cheque">Chèque</option>
+        </select>
+        <div class="error-feedback" *ngIf="reservationForm.get('mode_paiement')?.invalid && reservationForm.get('mode_paiement')?.touched">
+          <i class="bi bi-exclamation-circle me-1"></i>Mode de paiement requis
+        </div>
+      </div>
+
+      <!-- Montant de l'acompte -->
+      <div class="col-md-6">
+        <label class="form-label">Acompte (TND) <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" formControlName="acompte" min="0" [max]="calculateTotal()">
+        <small class="text-muted">Laissez 0 pour payer plus tard</small>
+        <div class="error-feedback" *ngIf="reservationForm.get('acompte')?.invalid && reservationForm.get('acompte')?.touched">
+          <i class="bi bi-exclamation-circle me-1"></i>Montant invalide
+        </div>
+      </div>
+
+      <!-- Options de paiement (optionnel) -->
+      <div class="col-12" *ngIf="reservationForm.get('mode_paiement')?.value === 'carte'">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle me-2"></i>
+          Vous serez redirigé vers la plateforme de paiement sécurisé après confirmation.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+       <!-- ===== RÉCAPITULATIF PRIX ===== -->
+<div class="summary-card" *ngIf="reservationForm.get('type_chambre')?.value">
+  <div class="summary-header">
+    <i class="bi bi-calculator me-2"></i>
+    <h3>Récapitulatif</h3>
+  </div>
+  <div class="summary-body">
+    <div class="summary-row">
+      <span>Pack</span>
+      <strong>{{selectedPack.titre}}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Type de chambre</span>
+      <strong>{{getTypeChambreLabel(reservationForm.get('type_chambre')?.value)}}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Nombre de personnes</span>
+      <strong>{{reservationForm.get('nombre_personnes')?.value}}</strong>
+    </div>
+    <div class="summary-row">
+      <span>Prix par personne</span>
+      <strong>{{selectedPack.prix | number}} TND</strong>
+    </div>
+    <div class="summary-total">
+      <span>Total à payer</span>
+      <span class="total-price">{{calculateTotal() | number}} TND</span>
+    </div>
+
+    <!-- ✅ ACOMPTE - visible seulement si > 0 -->
+    <div class="summary-acompte" *ngIf="reservationForm.get('acompte')?.value > 0">
+      <span>Acompte aujourd'hui</span>
+      <span class="acompte-price">{{reservationForm.get('acompte')?.value | number}} TND</span>
+    </div>
+
+    <!-- ✅ RESTE À PAYER - visible seulement si acompte < total -->
+    <div class="summary-restant" *ngIf="reservationForm.get('acompte')?.value > 0 && reservationForm.get('acompte')?.value < calculateTotal()">
+      <span>Reste à payer</span>
+      <span class="restant-price">{{calculateTotal() - reservationForm.get('acompte')?.value | number}} TND</span>
+    </div>
+  </div>
+</div>
+        <!-- BOUTONS -->
+        <div class="form-actions">
+          <button type="button" class="btn-annuler" (click)="closeReservationModal()">
+            <i class="bi bi-x-lg me-2"></i>Annuler
+          </button>
+          <button type="submit" class="btn-confirmer" [disabled]="reservationForm.invalid">
+            <i class="bi bi-check-lg me-2"></i>Confirmer la réservation
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+</ion-content>

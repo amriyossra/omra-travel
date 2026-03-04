@@ -1,0 +1,126 @@
+<ion-header>
+  <ion-toolbar [color]="role === 'admin' ? 'danger' : 'warning'">
+    <ion-title>Inscription {{ userType }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header text-white text-center py-3"
+               [class.bg-danger]="role === 'admin'"
+               [class.bg-warning]="role === 'agent'">
+            <h4 class="mb-0">Création de compte {{ userType }}</h4>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="alert"
+                 [class.alert-danger]="role === 'admin'"
+                 [class.alert-warning]="role === 'agent'">
+              <strong>Compte {{ userType }}</strong><br>
+              {{ role === 'admin' ?
+                'Accès complet à toutes les fonctionnalités d\'administration' :
+                'Gestion des réservations et des pèlerins'
+              }}
+            </div>
+
+            <form (ngSubmit)="register()" #registerForm="ngForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Prénom *</label>
+                  <input type="text"
+                         class="form-control"
+                         [(ngModel)]="userData.prenom"
+                         name="prenom"
+                         required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nom *</label>
+                  <input type="text"
+                         class="form-control"
+                         [(ngModel)]="userData.nom"
+                         name="nom"
+                         required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Email *</label>
+                <input type="email"
+                       class="form-control"
+                       [(ngModel)]="userData.email"
+                       name="email"
+                       required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Confirmer l'email *</label>
+                <input type="email"
+                       class="form-control"
+                       [(ngModel)]="userData.email_confirmation"
+                       name="email_confirmation"
+                       required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Téléphone *</label>
+                <input type="tel"
+                       class="form-control"
+                       [(ngModel)]="userData.telephone"
+                       name="telephone"
+                       required>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Mot de passe *</label>
+                  <input type="password"
+                         class="form-control"
+                         [(ngModel)]="userData.password"
+                         name="password"
+                         minlength="8"
+                         required>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <label class="form-label">Confirmation *</label>
+                  <input type="password"
+                         class="form-control"
+                         [(ngModel)]="userData.password_confirmation"
+                         name="password_confirmation"
+                         minlength="8"
+                         required>
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button type="submit"
+                        class="btn py-3"
+                        [class.btn-danger]="role === 'admin'"
+                        [class.btn-warning]="role === 'agent'"
+                        [disabled]="isLoading || !registerForm.valid">
+                  <span *ngIf="!isLoading">
+                    Créer le compte {{ userType }}
+                  </span>
+                  <span *ngIf="isLoading">
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                    Création en cours...
+                  </span>
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        routerLink="/select-role">
+                  ← Retour au choix du rôle
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

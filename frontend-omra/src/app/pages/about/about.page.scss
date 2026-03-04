@@ -1,0 +1,30 @@
+ion-content {
+  --background: #f8fafc;
+}
+
+ion-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+
+  ion-card-title {
+    color: #1e3c72;
+    font-weight: 600;
+  }
+
+  ul {
+    padding-left: 20px;
+    li {
+      margin: 8px 0;
+      list-style-type: none;
+      &:before {
+        content: "•";
+        color: #1e3c72;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+    }
+  }
+}

@@ -1,0 +1,259 @@
+<ion-header>
+  <ion-toolbar color="primary" style="--background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="d-flex align-items-center">
+        <ion-icon name="airplane" class="me-2"></ion-icon>
+        Omra Connect
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="--background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <!-- Carte principale avec effet de verre -->
+        <div class="card shadow-lg border-0" style="
+          border-radius: 20px;
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        ">
+
+          <!-- En-tête dynamique -->
+          <div class="card-header py-4 text-center text-white"
+               [ngStyle]="getLoginButtonStyle()"
+               style="border-radius: 20px 20px 0 0;">
+            <div class="d-flex justify-content-center mb-3">
+              <div class="rounded-circle bg-white bg-opacity-25 p-3">
+                <ion-icon name="lock-closed" size="large"></ion-icon>
+              </div>
+            </div>
+            <h2 class="fw-bold mb-2">Connexion</h2>
+            <p class="mb-0 opacity-90">Accédez à votre espace personnel</p>
+          </div>
+
+          <!-- Corps de la carte -->
+          <div class="card-body p-4 p-md-5">
+
+            <!-- Sélection du rôle - Version améliorée -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold mb-3">
+                <ion-icon name="person-circle-outline" class="me-1"></ion-icon>
+                Je souhaite me connecter en tant que :
+              </label>
+              <div class="row g-3">
+
+                <!-- Bouton Pèlerin (Bleu) -->
+                <div class="col-4">
+                  <div class="role-card-wrapper text-center"
+                       (click)="selectRole('pelerin')">
+                    <div class="role-card pelerin-card"
+                         [class.active]="role === 'pelerin'">
+                      <div class="role-icon-container mb-3">
+                        <div class="icon-circle"
+                             [class.active]="role === 'pelerin'"
+                             style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);">
+                          <ion-icon name="airplane" size="large" class="text-white"></ion-icon>
+                        </div>
+                        <div class="pulse-ring" *ngIf="role === 'pelerin'"></div>
+                      </div>
+                      <h6 class="fw-bold mb-1"
+                          [style.color]="role === 'pelerin' ? '#1d4ed8' : '#4b5563'">
+                        Pèlerin
+                      </h6>
+                      <p class="small text-muted mb-0">Voyage Omra</p>
+
+                      <!-- Badge actif -->
+                      <div class="active-badge" *ngIf="role === 'pelerin'">
+                        <ion-icon name="checkmark-circle" class="me-1"></ion-icon>
+                        Sélectionné
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bouton Agent (Vert) -->
+                <div class="col-4">
+                  <div class="role-card-wrapper text-center"
+                       (click)="selectRole('agent')">
+                    <div class="role-card agent-card"
+                         [class.active]="role === 'agent'">
+                      <div class="role-icon-container mb-3">
+                        <div class="icon-circle"
+                             [class.active]="role === 'agent'"
+                             style="background: linear-gradient(135deg, #10b981 0%, #047857 100%);">
+                          <ion-icon name="business" size="large" class="text-white"></ion-icon>
+                        </div>
+                        <div class="pulse-ring" *ngIf="role === 'agent'"></div>
+                      </div>
+                      <h6 class="fw-bold mb-1"
+                          [style.color]="role === 'agent' ? '#047857' : '#4b5563'">
+                        Agent
+                      </h6>
+                      <p class="small text-muted mb-0">Gestion voyages</p>
+
+                      <!-- Badge actif -->
+                      <div class="active-badge" *ngIf="role === 'agent'">
+                        <ion-icon name="checkmark-circle" class="me-1"></ion-icon>
+                        Sélectionné
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bouton Admin (Orange) -->
+                <div class="col-4">
+                  <div class="role-card-wrapper text-center"
+                       (click)="selectRole('admin')">
+                    <div class="role-card admin-card"
+                         [class.active]="role === 'admin'">
+                      <div class="role-icon-container mb-3">
+                        <div class="icon-circle"
+                             [class.active]="role === 'admin'"
+                             style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">
+                          <ion-icon name="shield-checkmark" size="large" class="text-white"></ion-icon>
+                        </div>
+                        <div class="pulse-ring" *ngIf="role === 'admin'"></div>
+                      </div>
+                      <h6 class="fw-bold mb-1"
+                          [style.color]="role === 'admin' ? '#b45309' : '#4b5563'">
+                        Admin
+                      </h6>
+                      <p class="small text-muted mb-0">Administration</p>
+
+                      <!-- Badge actif -->
+                      <div class="active-badge" *ngIf="role === 'admin'">
+                        <ion-icon name="checkmark-circle" class="me-1"></ion-icon>
+                        Sélectionné
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Indicateur visuel du rôle sélectionné -->
+              <div class="mt-4">
+                <div class="role-indicator" [ngClass]="getRoleIndicatorClass()">
+                  <div class="d-flex align-items-center">
+                    <ion-icon [name]="getRoleIcon()" class="me-2"></ion-icon>
+                    <div>
+                      <small class="fw-bold">Rôle sélectionné :</small>
+                      <div class="fw-bold">
+                        <span *ngIf="role === 'pelerin'">Pèlerin</span>
+                        <span *ngIf="role === 'agent'">Agent</span>
+                        <span *ngIf="role === 'admin'">Administrateur</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulaire -->
+            <form (ngSubmit)="login()" #loginForm="ngForm">
+
+              <!-- Email -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <ion-icon name="mail-outline" class="me-1"></ion-icon>
+                  Adresse email
+                </label>
+                <div class="input-group input-group-lg">
+                  <input type="email"
+                         class="form-control"
+                         [(ngModel)]="email"
+                         name="email"
+                         placeholder="exemple@email.com"
+                         required
+                         style="border-radius: 12px; padding: 15px; border: 2px solid #e5e7eb;">
+                </div>
+              </div>
+
+              <!-- Mot de passe -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">
+                  <ion-icon name="key-outline" class="me-1"></ion-icon>
+                  Mot de passe
+                </label>
+                <div class="input-group input-group-lg">
+                  <input type="password"
+                         class="form-control"
+                         [(ngModel)]="password"
+                         name="password"
+                         placeholder="••••••••"
+                         required
+                         style="border-radius: 12px; padding: 15px; border: 2px solid #e5e7eb;">
+                </div>
+                <div class="text-end mt-2">
+                  <a href="/forgot-password" class="text-decoration-none small text-primary">
+                    <ion-icon name="help-circle-outline" class="me-1"></ion-icon>
+                    Mot de passe oublié ?
+                  </a>
+                </div>
+              </div>
+
+              <!-- Bouton connexion -->
+              <div class="mb-4">
+                <button type="submit"
+                        class="btn btn-primary w-100 py-3 fw-bold"
+                        [disabled]="isLoading"
+                        [ngStyle]="getLoginButtonStyle()"
+                        style="border-radius: 12px; font-size: 1.1rem; border: none; transition: all 0.3s;">
+                  <span *ngIf="!isLoading">
+                    <ion-icon name="log-in" class="me-2"></ion-icon>
+                    Se connecter
+                  </span>
+                  <span *ngIf="isLoading">
+                    <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                    Connexion en cours...
+                  </span>
+                </button>
+              </div>
+
+            </form>
+
+            <!-- Séparateur -->
+            <div class="position-relative my-4">
+              <hr>
+              <div class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+                OU
+              </div>
+            </div>
+
+            <!-- Bouton inscription -->
+            <div class="text-center">
+              <p class="text-muted mb-3">Vous n'avez pas encore de compte ?</p>
+              <a [href]="'/register?role=' + role"
+                 class="btn btn-lg py-3 fw-bold w-100"
+                 [ngStyle]="getRegisterButtonStyle()"
+                 style="border-radius: 12px; text-decoration: none; display: block;">
+                <ion-icon [name]="getRoleIcon()" class="me-2"></ion-icon>
+                <span *ngIf="role === 'pelerin'">Créer un compte Pèlerin</span>
+                <span *ngIf="role === 'agent'">Créer un compte Agent</span>
+                <span *ngIf="role === 'admin'">Créer un compte Admin</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-4 text-white">
+          <p class="small">
+            © 2024 Omra Connect. Tous droits réservés.
+            <a href="/terms" class="text-white ms-2">Mentions légales</a>
+            <a href="/privacy" class="text-white ms-2">Confidentialité</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ion-content>

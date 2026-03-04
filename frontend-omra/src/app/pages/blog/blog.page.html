@@ -1,0 +1,20 @@
+<app-header></app-header>
+
+<ion-content>
+  <ion-searchbar [(ngModel)]="searchQuery" placeholder="Rechercher un article..."></ion-searchbar>
+
+  <ion-list>
+    <ion-card *ngFor="let article of filteredArticles" (click)="selectArticle(article)">
+      <ion-card-header>
+        <ion-badge color="primary">{{ article.category }}</ion-badge>
+        <ion-card-title>{{ article.title }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{ article.excerpt }}</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+<app-footer></app-footer>
+</ion-content>
+

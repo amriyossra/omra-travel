@@ -1,0 +1,180 @@
+<app-header></app-header>
+
+<ion-content class="profile-content">
+  <div class="container py-5">
+    <!-- En-tête du profil -->
+    <div class="profile-header text-center mb-5">
+      <div class="avatar-wrapper mb-3">
+        <img [src]="'https://ui-avatars.com/api/?name=' + user.prenom + '+' + user.nom + '&background=0d6efd&color=fff&size=128'"
+             alt="Avatar" class="rounded-circle border border-4 border-primary shadow">
+      </div>
+      <h2 class="fw-bold">{{ user.prenom }} {{ user.nom }}</h2>
+      <p class="text-muted">
+        <i class="bi bi-envelope me-2"></i>{{ user.email }}
+        <span class="mx-2">•</span>
+        <i class="bi bi-telephone me-2"></i>{{ user.telephone || 'Non renseigné' }}
+      </p>
+      <span class="badge bg-primary rounded-pill px-3 py-2">
+        <i class="bi bi-person-badge me-2"></i>{{ user.role | uppercase }}
+      </span>
+    </div>
+
+    <!-- Mode édition ou affichage -->
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0 fw-bold">
+              <i class="bi bi-person-circle me-2"></i>
+              {{ isEditing ? 'Modifier mon profil' : 'Mes informations' }}
+            </h5>
+          </div>
+
+          <div class="card-body p-4">
+            <!-- MODE AFFICHAGE -->
+            <div *ngIf="!isEditing">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Civilité</small>
+                    <strong>{{ user.civilite || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Prénom</small>
+                    <strong>{{ user.prenom }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Nom</small>
+                    <strong>{{ user.nom }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Email</small>
+                    <strong>{{ user.email }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Téléphone</small>
+                    <strong>{{ user.telephone || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Date de naissance</small>
+                    <strong>{{ user.date_naissance || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Adresse</small>
+                    <strong>{{ user.adresse || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Code postal</small>
+                    <strong>{{ user.code_postal || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Ville</small>
+                    <strong>{{ user.ville || 'Non renseigné' }}</strong>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="info-item p-3 bg-light rounded-3">
+                    <small class="text-muted d-block">Pays</small>
+                    <strong>{{ user.pays }}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3 mt-4">
+                <button class="btn btn-primary flex-grow-1 py-2 rounded-pill" (click)="enableEdit()">
+                  <i class="bi bi-pencil-square me-2"></i>Modifier
+                </button>
+                <button class="btn btn-outline-danger py-2 rounded-pill px-4" (click)="logout()">
+                  <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
+                </button>
+              </div>
+              <button class="btn btn-link text-danger w-100 mt-3" (click)="deleteAccount()">
+                <i class="bi bi-trash me-2"></i>Supprimer mon compte
+              </button>
+            </div>
+
+            <!-- MODE ÉDITION -->
+            <div *ngIf="isEditing">
+              <form (ngSubmit)="updateProfile()">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Civilité</label>
+                    <select class="form-select" [(ngModel)]="user.civilite" name="civilite">
+                      <option value="Monsieur">Monsieur</option>
+                      <option value="Madame">Madame</option>
+                      <option value="Mademoiselle">Mademoiselle</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Prénom *</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.prenom" name="prenom" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Nom *</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.nom" name="nom" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Email *</label>
+                    <input type="email" class="form-control" [(ngModel)]="user.email" name="email" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Téléphone</label>
+                    <input type="tel" class="form-control" [(ngModel)]="user.telephone" name="telephone">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Date de naissance</label>
+                    <input type="date" class="form-control" [(ngModel)]="user.date_naissance" name="date_naissance">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-semibold">Adresse</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.adresse" name="adresse">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Code postal</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.code_postal" name="code_postal">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Ville</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.ville" name="ville">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label fw-semibold">Pays</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.pays" name="pays">
+                  </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                  <button type="button" class="btn btn-outline-secondary flex-grow-1 py-2 rounded-pill" (click)="cancelEdit()">
+                    <i class="bi bi-x-circle me-2"></i>Annuler
+                  </button>
+                  <button type="submit" class="btn btn-primary flex-grow-1 py-2 rounded-pill">
+                    <i class="bi bi-check-circle me-2"></i>Sauvegarder
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</ion-content>
+
+

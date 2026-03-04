@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Nos Packs Omra</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Choisissez votre pack</h1>
+    <p>Des voyages spirituels adaptés à vos besoins</p>
+  </div>
+
+  <!-- Packs Grid -->
+  <div class="packs-grid">
+    <ion-card *ngFor="let pack of packs" class="pack-card"
+              [class.unavailable]="!pack.disponible">
+      <ion-card-header>
+        <ion-card-title>{{ pack.titre }}</ion-card-title>
+        <ion-card-subtitle>{{ pack.duree }} jours • {{ pack.hotel }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p>{{ pack.description }}</p>
+
+        <div class="pack-details">
+          <div class="detail">
+            <ion-icon name="airplane"></ion-icon>
+            <span>{{ pack.transport }}</span>
+          </div>
+
+          <div class="price">
+            {{ pack.prix }} TND
+          </div>
+        </div>
+
+        <div class="services">
+          <h4>Services inclus :</h4>
+          <ul>
+            <li *ngFor="let service of getServices(pack.services)">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              {{ service }}
+            </li>
+          </ul>
+        </div>
+      </ion-card-content>
+
+      <ion-button expand="block" color="primary"
+                  [disabled]="!pack.disponible"
+                  (click)="reserver(pack)">
+        {{ pack.disponible ? 'Réserver' : 'Indisponible' }}
+      </ion-button>
+    </ion-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="packs.length === 0" class="empty-state">
+    <ion-icon name="cube-outline"></ion-icon>
+    <p>Aucun pack disponible pour le moment</p>
+  </div>
+</ion-content>

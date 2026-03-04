@@ -1,0 +1,310 @@
+<ion-header>
+  <ion-toolbar style="--background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="text-white">
+      <div class="d-flex align-items-center">
+        <ion-icon name="shield-checkmark" class="me-2"></ion-icon>
+        Dashboard Administrateur
+      </div>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button href="/login" color="light">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); min-height: 100vh;">
+  <!-- Bannière -->
+  <div class="banner py-5" style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="text-white fw-bold mb-3">
+            <ion-icon name="shield-checkmark" class="me-2"></ion-icon>
+            Administration Omra Connect
+          </h1>
+          <p class="text-white opacity-90 fs-5 mb-0">
+            Gestion complète de la plateforme Omra
+          </p>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="avatar-circle d-inline-block" style="background: rgba(255, 255, 255, 0.2);">
+            <ion-icon name="shield-checkmark" class="text-white" style="font-size: 80px;"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <!-- Statistiques -->
+    <div class="row mb-5">
+      <div class="col-md-3 col-6 mb-4">
+        <div class="card shadow border-0 text-center" style="border-radius: 15px; border-top: 4px solid #3b82f6;">
+          <div class="card-body py-4">
+            <div class="icon-circle mb-3 mx-auto" style="background: #dbeafe; width: 60px; height: 60px;">
+              <ion-icon name="people" class="text-primary" style="font-size: 24px;"></ion-icon>
+            </div>
+            <h2 class="fw-bold text-primary mb-1">{{ stats?.total_users || 0 }}</h2>
+            <p class="text-muted mb-0">Utilisateurs</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="card shadow border-0 text-center" style="border-radius: 15px; border-top: 4px solid #10b981;">
+          <div class="card-body py-4">
+            <div class="icon-circle mb-3 mx-auto" style="background: #d1fae5; width: 60px; height: 60px;">
+              <ion-icon name="calendar" class="text-success" style="font-size: 24px;"></ion-icon>
+            </div>
+            <h2 class="fw-bold text-success mb-1">{{ stats?.total_reservations || 0 }}</h2>
+            <p class="text-muted mb-0">Réservations</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="card shadow border-0 text-center" style="border-radius: 15px; border-top: 4px solid #f59e0b;">
+          <div class="card-body py-4">
+            <div class="icon-circle mb-3 mx-auto" style="background: #fef3c7; width: 60px; height: 60px;">
+              <ion-icon name="briefcase" class="text-warning" style="font-size: 24px;"></ion-icon>
+            </div>
+            <h2 class="fw-bold text-warning mb-1">{{ stats?.total_packs || 0 }}</h2>
+            <p class="text-muted mb-0">Packs</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-6 mb-4">
+        <div class="card shadow border-0 text-center" style="border-radius: 15px; border-top: 4px solid #8b5cf6;">
+          <div class="card-body py-4">
+            <div class="icon-circle mb-3 mx-auto" style="background: #ede9fe; width: 60px; height: 60px;">
+              <ion-icon name="cash" class="text-purple" style="font-size: 24px;"></ion-icon>
+            </div>
+            <h2 class="fw-bold text-purple mb-1">{{ stats?.revenue_total || 0 }} TND</h2>
+            <p class="text-muted mb-0">Chiffre d'affaires</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gestion des packs -->
+    <div class="card shadow-lg border-0 mb-5" style="border-radius: 15px; overflow: hidden;">
+      <div class="card-header py-3 d-flex justify-content-between align-items-center"
+           style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">
+        <h5 class="mb-0 text-white">
+          <ion-icon name="briefcase-outline" class="me-2"></ion-icon>
+          Gestion des Packs Omra
+        </h5>
+        <button class="btn btn-light btn-sm fw-bold" (click)="ajouterPack()">
+          <ion-icon name="add-outline" class="me-1"></ion-icon>
+          Ajouter un pack
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="border-top: none;">ID</th>
+                <th style="border-top: none;">Titre</th>
+                <th style="border-top: none;">Prix (TND)</th>
+                <th style="border-top: none;">Durée</th>
+                <th style="border-top: none;">Statut</th>
+                <th style="border-top: none;" class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pack of packs" class="align-middle">
+                <td><strong>#{{ pack.id }}</strong></td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="icon-circle me-2" style="background: #fef3c7; width: 36px; height: 36px;">
+                      <ion-icon name="airplane" class="text-warning"></ion-icon>
+                    </div>
+                    <div>
+                      <strong>{{ pack.titre }}</strong>
+                      <div class="small text-muted">{{ pack.description }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge bg-warning text-dark py-2 px-3">
+                    {{ pack.prix }} TND
+                  </span>
+                </td>
+                <td>{{ pack.duree }} jours</td>
+                <td>
+                  <span class="badge"
+                        [class.bg-success]="pack.disponible"
+                        [class.bg-danger]="!pack.disponible"
+                        style="padding: 8px 12px;">
+                    {{ pack.disponible ? 'Disponible' : 'Indisponible' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-outline-warning btn-sm"
+                            (click)="editerPack(pack)"
+                            title="Modifier">
+                      <ion-icon name="create-outline"></ion-icon>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm"
+                            (click)="supprimerPack(pack.id)"
+                            title="Supprimer">
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphique et autres sections -->
+    <div class="row">
+      <!-- Graphique des réservations -->
+      <div class="col-lg-8 mb-4">
+        <div class="card shadow-lg border-0 h-100" style="border-radius: 15px;">
+          <div class="card-header py-3" style="background: #fef3c7;">
+            <h5 class="mb-0 text-dark">
+              <ion-icon name="stats-chart-outline" class="me-2"></ion-icon>
+              Statistiques des réservations
+            </h5>
+          </div>
+          <div class="card-body">
+            <div style="height: 300px; position: relative;">
+              <canvas id="reservationsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dernières activités -->
+      <div class="col-lg-4 mb-4">
+        <div class="card shadow-lg border-0 h-100" style="border-radius: 15px;">
+          <div class="card-header py-3" style="background: #fef3c7;">
+            <h5 class="mb-0 text-dark">
+              <ion-icon name="time-outline" class="me-2"></ion-icon>
+              Dernières activités
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item border-0 py-3" *ngFor="let activity of activities">
+                <div class="d-flex align-items-start">
+                  <div class="icon-circle me-3"
+                       [ngClass]="activity.type === 'user' ? 'bg-primary' :
+                                 activity.type === 'reservation' ? 'bg-success' : 'bg-warning'"
+                       style="width: 40px; height: 40px;">
+                    <ion-icon [name]="activity.icon" class="text-white"></ion-icon>
+                  </div>
+                  <div class="flex-grow-1">
+                    <strong class="d-block">{{ activity.title }}</strong>
+                    <small class="text-muted">{{ activity.description }}</small>
+                    <div class="small text-muted mt-1">
+                      <ion-icon name="time-outline" class="me-1"></ion-icon>
+                      {{ activity.time }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bouton retour -->
+    <div class="text-center mt-5">
+      <a href="/login" class="btn btn-warning btn-lg px-5">
+        <ion-icon name="log-out-outline" class="me-2"></ion-icon>
+        Se déconnecter
+      </a>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Styles CSS -->
+<style>
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-circle {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner {
+  background-size: cover;
+  background-position: center;
+}
+
+.badge {
+  font-size: 0.85rem;
+  border-radius: 20px;
+}
+
+.text-purple {
+  color: #8b5cf6 !important;
+}
+
+.bg-purple {
+  background-color: #8b5cf6 !important;
+}
+
+.table th {
+  font-weight: 600;
+  color: #374151;
+  padding: 1rem;
+}
+
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.list-group-item {
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+
+.list-group-item:last-child {
+  border-bottom: none !important;
+}
+
+.btn-outline-warning {
+  border-width: 2px;
+}
+
+.btn-outline-danger {
+  border-width: 2px;
+}
+
+@media (max-width: 768px) {
+  .banner h1 {
+    font-size: 1.8rem;
+  }
+
+  .card-body {
+    padding: 1rem !important;
+  }
+
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+</style>
